@@ -1,0 +1,97 @@
+name: CI
+
+on:
+#  push:
+  pull_request:
+    branches:
+      - master
+  schedule:
+    - cron: '0 10 * * *' # Once per day at 10am UTC
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+# eventually add in matrix here
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8'
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+      - name: Build with Gradle
+        run: ./gradlew clean build --continue
+  snapshot_tests:
+    name: Test against snapshots
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8'
+      - name: Snapshop Tests
+        run: echo Testing against snapshots
+  sonar:
+    name: Static Code Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8'
+      - name: Sonar
+        run: echo Running Sonarqube static code analysis
+  artifacts:
+    name: Deploy Artifacts
+    needs: [build, snapshot_tests, sonar]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8'
+      - name: Deploy Artifacts
+        run: echo Deploying artifacts
+  docs:
+    name: Deploy Docs
+    needs: [build, snapshot_tests, sonar]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: Deploy Docs
+        run: echo Deploying Docs
+  schema:
+    name: Deploy Schema
+    needs: [build, snapshot_tests, sonar]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: Deploy Schema
+        run: echo Deploying Schema
+
+# set up JDK 11
+# set up JDK 12
+# snapshots
+# sonar
+
+# then:
+# artifcats
+# docs
+# schema
+
