@@ -1,10 +1,10 @@
 name: CI
 
 on:
-#  push:
-  pull_request:
+  push:
+#  pull_request:
     branches:
-      - master
+      - deploy-pipeline-test
   schedule:
     - cron: '0 10 * * *' # Once per day at 10am UTC
 
@@ -36,7 +36,8 @@ jobs:
         with:
           java-version: '8'
       - name: Snapshop Tests
-        run: echo Testing against snapshots
+        run: echo Testing snapshots
+#        run: ./gradlew test -PforceMavenRepositories=snapshot -PspringVersion='5.+' -PreactorVersion=Dysprosium-BUILD-SNAPSHOT -PspringDataVersion=Lovelace-BUILD-SNAPSHOT -PlocksDisabled --stacktrace
   sonar:
     name: Static Code Analysis
     runs-on: ubuntu-latest
@@ -47,7 +48,10 @@ jobs:
         with:
           java-version: '8'
       - name: Sonar
-        run: echo Running Sonarqube static code analysis
+        run: ./gradlew sonarqube -PexcludeProjects='**/samples/**' -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" --stacktrace
+        env:
+          SONAR_URL: ${{ secrets.SONAR_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   artifacts:
     name: Deploy Artifacts
     needs: [build, snapshot_tests, sonar]
@@ -84,14 +88,4 @@ jobs:
           java-version: 8
       - name: Deploy Schema
         run: echo Deploying Schema
-
-# set up JDK 11
-# set up JDK 12
-# snapshots
-# sonar
-
-# then:
-# artifcats
-# docs
-# schema
 
