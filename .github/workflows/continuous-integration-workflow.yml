@@ -36,8 +36,7 @@ jobs:
         with:
           java-version: '8'
       - name: Snapshop Tests
-        run: echo Testing snapshots
-#        run: ./gradlew test -PforceMavenRepositories=snapshot -PspringVersion='5.+' -PreactorVersion=Dysprosium-BUILD-SNAPSHOT -PspringDataVersion=Lovelace-BUILD-SNAPSHOT -PlocksDisabled --stacktrace
+        run: ./gradlew test -PforceMavenRepositories=snapshot -PreactorVersion=Dysprosium-BUILD-SNAPSHOT -PspringDataVersion=Lovelace-BUILD-SNAPSHOT -PlocksDisabled --stacktrace
   sonar:
     name: Static Code Analysis
     runs-on: ubuntu-latest
