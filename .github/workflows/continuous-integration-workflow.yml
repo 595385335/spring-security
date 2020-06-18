@@ -26,6 +26,8 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
       - name: Build with Gradle
         run: ./gradlew clean build --continue
+      - name: Echo branch name
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
   snapshot_tests:
     name: Test against snapshots
     runs-on: ubuntu-latest
