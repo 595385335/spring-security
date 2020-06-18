@@ -62,7 +62,7 @@ jobs:
         with:
           java-version: '8'
       - name: Deploy Artifacts
-        run: Echo deploying artifacts
+        run: echo Deploying artifacts
 #        run: ./gradlew deployArtifacts finalizeDeployArtifacts -Psigning.secretKeyRingFile=$SIGNING_KEYRING_FILE -Psigning.keyId="$GPG_KEYID" -Psigning.password="$GPG_PASSPHRASE" -PossrhUsername="$OSSRH_USERNAME" -PossrhPassword="$OSSRH_PASSWORD" -PartifactoryUsername="$ARTIFACTORY_USERNAME" -PartifactoryPassword="$ARTIFACTORY_PASSWORD" --stacktrace
 #        env:
 #          GPG_PASSPHRASE: ${{ GPG_PASSPHRASE }}
