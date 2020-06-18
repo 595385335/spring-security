@@ -15,6 +15,11 @@ jobs:
 # eventually add in matrix here
     steps:
       - uses: actions/checkout@v2
+      - name: Echo branch name
+        run: echo Github branch is "$GITHUB_BRANCH" branch name is "$BRANCH_NAME"
+        env:
+          GITHUB_BRANCH: ${{ github.ref }}
+          BRANCH_NAME: ${{ github.head_ref }}
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
@@ -26,8 +31,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
       - name: Build with Gradle
         run: ./gradlew clean build --continue
-      - name: Echo branch name
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
   snapshot_tests:
     name: Test against snapshots
     runs-on: ubuntu-latest
