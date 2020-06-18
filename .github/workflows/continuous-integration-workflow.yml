@@ -50,11 +50,15 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '8'
-      - name: Sonar
+      - name: Run Sonar on master
+        if: github.ref == "refs/heads/master"
         run: ./gradlew sonarqube -PexcludeProjects='**/samples/**' -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" --stacktrace
         env:
           SONAR_URL: ${{ secrets.SONAR_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Run Sonar on given branch
+        if: github.ref != "refs/heads/master"
+        run: echo "Not on master branch"
   artifacts:
     name: Deploy Artifacts
     needs: [build, snapshot_tests, sonar]
