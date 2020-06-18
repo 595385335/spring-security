@@ -16,10 +16,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Echo branch name
-        run: echo Github branch is "$GITHUB_BRANCH" branch name is "$BRANCH_NAME"
+        run: echo Github branch is "$GITHUB_BRANCH#refs/*/"
         env:
           GITHUB_BRANCH: ${{ github.ref }}
-          BRANCH_NAME: ${{ github.head_ref }}
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
