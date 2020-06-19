@@ -16,10 +16,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Display branch name
-        run: echo Running for branch "$GITHUB_BRANCH"
+        run: |
+          echo Running for branch "$GITHUB_BRANCH"
+          echo Dont show this secret "$SECRET_THING"
+          echo This is ok to show "$CAN_EXPOSE"
+          echo Dont show this either "$OTHER_SECRET_THING"
         env:
           GITHUB_BRANCH: ${{ github.ref }}
-
+          CAN_EXPOSE: "safe to expose!"
+          SECRET_THING: ${{ secrets.SECRET_THING }}
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
