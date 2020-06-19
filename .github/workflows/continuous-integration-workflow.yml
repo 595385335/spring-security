@@ -61,7 +61,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/master' }}
   artifacts:
     name: Deploy Artifacts
-    needs: [build, snapshot_tests, sonar]
+#    needs: [build, snapshot_tests, sonar]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
