@@ -87,6 +87,7 @@ jobs:
         env:
           TEST_SIGNING_KEY: ${{ secrets.TEST_SIGNING_KEY }}
           TEST_SIGNING_PASSWORD: ${{ secrets.TEST_SIGNING_PASSWORD }}
+#          Extra comment
 #          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
 #          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
 #          ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
