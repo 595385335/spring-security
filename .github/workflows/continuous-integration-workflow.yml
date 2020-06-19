@@ -70,10 +70,10 @@ jobs:
         with:
           java-version: '8'
       - name: Sign archives
-        run: ./gradlew :spring-security-core:signArchives -Psigning.key="$TEST_SIGNING_KEY" -Psigning.password="$TEST_SIGNING_PASSWORD" --stacktrace
+        run: ./gradlew :spring-security-core:signArchives
         env:
-          TEST_SIGNING_KEY: ${{ secrets.TEST_SIGNING_KEY }}
-          TEST_SIGNING_PASSWORD: ${{ secrets.TEST_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.TEST_SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.TEST_SIGNING_PASSWORD }}
 #          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
 #          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
 #          ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
