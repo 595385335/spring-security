@@ -77,6 +77,8 @@ jobs:
           java-version: '8'
       - name: Sign archives
         run: |
+          ls -a ~/
+          ls -a ~/.gnupg
           echo key set to "$ORG_GRADLE_PROJECT_signingKey"
           export ORG_GRADLE_PROJECT_signingPassword="$TEST_SIGNING_PASSWORD"
           echo password set to "$ORG_GRADLE_PROJECT_signingPassword"
