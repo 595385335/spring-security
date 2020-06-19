@@ -53,12 +53,12 @@ jobs:
       - name: Run Sonar on given branch
         run: echo "Not on master branch"
         if: ${{ github.ref != 'refs/heads/master' }}
-      - name: Run Sonar on master
-        run: ./gradlew sonarqube -PexcludeProjects='**/samples/**' -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" --stacktrace
-        env:
-          SONAR_URL: ${{ secrets.SONAR_URL }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        if: ${{ github.ref == 'refs/heads/master' }}
+#      - name: Run Sonar on master
+#        run: ./gradlew sonarqube -PexcludeProjects='**/samples/**' -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" --stacktrace
+#        env:
+#          SONAR_URL: ${{ secrets.SONAR_URL }}
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#        if: ${{ github.ref == 'refs/heads/master' }}
   artifacts:
     name: Deploy Artifacts
 #    needs: [build, snapshot_tests, sonar]
@@ -70,10 +70,10 @@ jobs:
         with:
           java-version: '8'
       - name: Sign archives
-        run: ./gradlew signArchives -Psigning.key="$GPG_PRIVATE_KEY" -Psigning.password="$GPG_PASSPHRASE" --stacktrace
+        run: ./gradlew :spring-security-core:signArchives -Psigning.key="$TEST_SIGNING_KEY" -Psigning.password="$TEST_SIGNING_PASSWORD" --stacktrace
         env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          TEST_SIGNING_KEY: ${{ secrets.TEST_SIGNING_KEY }}
+          TEST_SIGNING_PASSWORD: ${{ secrets.TEST_SIGNING_PASSWORD }}
 #          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
 #          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
 #          ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
