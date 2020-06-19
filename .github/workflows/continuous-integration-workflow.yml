@@ -69,10 +69,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '8'
-#      - name: Deploy Artifacts
-#        run: ./gradlew deployArtifacts finalizeDeployArtifacts -Psigning.key="$GPG_PRIVATE_KEY" -Psigning.password="$GPG_PASSPHRASE" -PossrhUsername="$OSSRH_USERNAME" -PossrhPassword="$OSSRH_PASSWORD" -PartifactoryUsername="$ARTIFACTORY_USERNAME" -PartifactoryPassword="$ARTIFACTORY_PASSWORD" --stacktrace
-        - name: Sign archives
-          run: ./gradlew signArchives -Psigning.key="$GPG_PRIVATE_KEY" -Psigning.password="$GPG_PASSPHRASE" --stacktrace
+      - name: Sign archives
+        run: ./gradlew signArchives -Psigning.key="$GPG_PRIVATE_KEY" -Psigning.password="$GPG_PASSPHRASE" --stacktrace
         env:
           GPG_PASSPHRASE: ${{ GPG_PASSPHRASE }}
           GPG_PRIVATE_KEY: ${{ GPG_PRIVATE_KEY }}
