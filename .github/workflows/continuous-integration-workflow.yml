@@ -15,10 +15,13 @@ jobs:
 # eventually add in matrix here
     steps:
       - uses: actions/checkout@v2
-      - name: Echo branch name
-        run: echo Github branch is "$GITHUB_BRANCH#refs/*/"
+      - name: Set branch name
+        id: vars
+        run: echo "::set-env name=BRANCH_NAME::${GITHUB_REF#refs/*/}"
         env:
           GITHUB_BRANCH: ${{ github.ref }}
+      - name: Check branch name output
+          run: echo ${{ steps.vars.outputs.BRANCH_NAME }}
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
