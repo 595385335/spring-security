@@ -58,10 +58,10 @@ jobs:
         env:
           SONAR_URL: ${{ secrets.SONAR_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        if: github.ref == "refs/heads/master"
+        if: github.ref == 'refs/heads/master'
       - name: Run Sonar on given branch
         run: echo "Not on master branch"
-        if: github.ref != "refs/heads/master"
+        if: github.ref != 'refs/heads/master'
   artifacts:
     name: Deploy Artifacts
     needs: [build, snapshot_tests, sonar]
