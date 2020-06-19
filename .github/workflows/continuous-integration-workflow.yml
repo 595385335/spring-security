@@ -162,7 +162,7 @@ jobs:
           echo key set to "$ORG_GRADLE_PROJECT_signingKey"
           export ORG_GRADLE_PROJECT_signingPassword="$TEST_SIGNING_PASSWORD"
           echo password set to "$ORG_GRADLE_PROJECT_signingPassword"
-          ./gradlew :spring-security-core:signArchives
+          ./gradlew :spring-security-core:signArchives --debug --stacktrace
         env:
           TEST_SIGNING_KEY: ${{ secrets.TEST_SIGNING_KEY }}
           TEST_SIGNING_PASSWORD: ${{ secrets.TEST_SIGNING_PASSWORD }}
