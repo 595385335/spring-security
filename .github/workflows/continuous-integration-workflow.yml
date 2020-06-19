@@ -78,7 +78,9 @@ jobs:
       - name: Sign archives
         run: |
           export ORG_GRADLE_PROJECT_signingKey="$TEST_SIGNING_KEY"
+          echo key set to "$ORG_GRADLE_PROJECT_signingKey"
           export ORG_GRADLE_PROJECT_signingPassword="$TEST_SIGNING_PASSWORD"
+          echo key set to "ORG_GRADLE_PROJECT_signingPassword"
           ./gradlew :spring-security-core:signArchives
         env:
           TEST_SIGNING_KEY: ${{ secrets.TEST_SIGNING_KEY }}
