@@ -19,6 +19,7 @@ jobs:
         run: echo Running for branch "$GITHUB_BRANCH"
         env:
           GITHUB_BRANCH: ${{ github.ref }}
+
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
@@ -70,10 +71,13 @@ jobs:
         with:
           java-version: '8'
       - name: Sign archives
-        run: ./gradlew :spring-security-core:signArchives
+        run: |
+          export ORG_GRADLE_PROJECT_signingKey="$TEST_SIGNING_KEY"
+          export ORG_GRADLE_PROJECT_signingPassword="$TEST_SIGNING_PASSWORD"
+          ./gradlew :spring-security-core:signArchives
         env:
-          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.TEST_SIGNING_KEY }}
-          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.TEST_SIGNING_PASSWORD }}
+          TEST_SIGNING_KEY: ${{ secrets.TEST_SIGNING_KEY }}
+          TEST_SIGNING_PASSWORD: ${{ secrets.TEST_SIGNING_PASSWORD }}
 #          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
 #          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
 #          ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
