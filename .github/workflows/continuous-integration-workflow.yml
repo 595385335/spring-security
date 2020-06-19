@@ -69,16 +69,17 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '8'
-      - name: Deploy Artifacts
-        run: echo Deploying artifacts
-#        run: ./gradlew deployArtifacts finalizeDeployArtifacts -Psigning.secretKeyRingFile=$SIGNING_KEYRING_FILE -Psigning.keyId="$GPG_KEYID" -Psigning.password="$GPG_PASSPHRASE" -PossrhUsername="$OSSRH_USERNAME" -PossrhPassword="$OSSRH_PASSWORD" -PartifactoryUsername="$ARTIFACTORY_USERNAME" -PartifactoryPassword="$ARTIFACTORY_PASSWORD" --stacktrace
-#        env:
-#          GPG_PASSPHRASE: ${{ GPG_PASSPHRASE }}
-#          GPG_KEYID: ${{ GPG_KEYID }}
-#          OSSRH_USERNAME: ${{ OSSRH_USERNAME }}
-#          OSSRH_PASSWORD: ${{ OSSRH_PASSWORD }}
-#          ARTIFACTORY_USERNAME: ${{ ARTIFACTORY_USERNAME }}
-#          ARTIFACTORY_PASSWORD: ${{ ARTIFACTORY_PASSWORD }}
+#      - name: Deploy Artifacts
+#        run: ./gradlew deployArtifacts finalizeDeployArtifacts -Psigning.key="$GPG_PRIVATE_KEY" -Psigning.password="$GPG_PASSPHRASE" -PossrhUsername="$OSSRH_USERNAME" -PossrhPassword="$OSSRH_PASSWORD" -PartifactoryUsername="$ARTIFACTORY_USERNAME" -PartifactoryPassword="$ARTIFACTORY_PASSWORD" --stacktrace
+        - name: Sign archives
+          run: ./gradlew signArchives -Psigning.key="$GPG_PRIVATE_KEY" -Psigning.password="$GPG_PASSPHRASE" --stacktrace
+        env:
+          GPG_PASSPHRASE: ${{ GPG_PASSPHRASE }}
+          GPG_PRIVATE_KEY: ${{ GPG_PRIVATE_KEY }}
+          OSSRH_USERNAME: ${{ OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ OSSRH_PASSWORD }}
+          ARTIFACTORY_USERNAME: ${{ ARTIFACTORY_USERNAME }}
+          ARTIFACTORY_PASSWORD: ${{ ARTIFACTORY_PASSWORD }}
   docs:
     name: Deploy Docs
     needs: [build, snapshot_tests, sonar]
