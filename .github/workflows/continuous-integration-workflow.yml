@@ -21,7 +21,7 @@ jobs:
         env:
           GITHUB_BRANCH: ${{ github.ref }}
       - name: Check branch name output
-          run: echo ${{ steps.vars.outputs.BRANCH_NAME }}
+        run: echo ${{ steps.vars.outputs.BRANCH_NAME }}
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
