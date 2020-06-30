@@ -79,14 +79,14 @@ jobs:
         with:
           java-version: '8'
       - name: Sign archives
-        run: echo Signing archives
-#        run: |
-#          export ORG_GRADLE_PROJECT_signingKey="$TEST_SIGNING_KEY"
-#          export ORG_GRADLE_PROJECT_signingPassword="$TEST_SIGNING_PASSWORD"
-#          ./gradlew :spring-security-core:signArchives --stacktrace
-#        env:
-#          TEST_SIGNING_KEY: ${{ secrets.TEST_SIGNING_KEY }}
-#          TEST_SIGNING_PASSWORD: ${{ secrets.TEST_SIGNING_PASSWORD }}
+#        run: echo Signing archives
+        run: |
+          export ORG_GRADLE_PROJECT_signingKey="$GPG_PUBLIC_KEY"
+          export ORG_GRADLE_PROJECT_signingPassword="$GPG_PASSPHRASE"
+          ./gradlew :spring-security-core:signArchives --stacktrace
+        env:
+          GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 #          Extra comment
 #          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
 #          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
