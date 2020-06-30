@@ -19,14 +19,13 @@ jobs:
         run: |
           echo Running for branch "$BRANCH_NAME"
           echo test2 ${GITHUB_REF#refs/heads/}
+          echo ./gradlew sonarqube -PexcludeProjects='**/samples/**' -Dsonar.projectKey="spring-security-${GITHUB_REF#refs/heads/}" -Dsonar.projectName="spring-security-${GITHUB_REF#refs/heads/}" -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" --stacktrace
           echo test3 "${BRANCH_NAME##*/}"
-          echo Dont show this secret "$SECRET_THING"
-          echo This is ok to show "$CAN_EXPOSE"
-          echo Dont show this either "$OTHER_SECRET_THING"
         env:
           BRANCH_NAME: ${{ github.ref }}
-          CAN_EXPOSE: "safe to expose!"
-          SECRET_THING: ${{ secrets.SECRET_THING }}
+          env:
+            SONAR_URL: ${{ secrets.SONAR_URL }}
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
@@ -60,7 +59,10 @@ jobs:
           java-version: '8'
       - name: Run Sonar on given (non-master) branch
         if: ${{ github.ref != 'refs/heads/master' }}
-        run: ./gradlew sonarqube -PexcludeProjects='**/samples/**' -Dsonar.projectKey='spring-security-${GITHUB_REF#refs/heads/}' -Dsonar.projectName='spring-security-${GITHUB_REF#refs/heads/}' -Dsonar.host.url=$SPRING_SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN --stacktrace
+        run: ./gradlew sonarqube -PexcludeProjects='**/samples/**' -Dsonar.projectKey="spring-security-${GITHUB_REF#refs/heads/}" -Dsonar.projectName="spring-security-${GITHUB_REF#refs/heads/}" -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" --stacktrace
+        env:
+          SONAR_URL: ${{ secrets.SONAR_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 #      - name: Run Sonar on master
 #        if: ${{ github.ref == 'refs/heads/master' }}
 #        run: ./gradlew sonarqube -PexcludeProjects='**/samples/**' -Dsonar.host.url=$SPRING_SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN --stacktrace
