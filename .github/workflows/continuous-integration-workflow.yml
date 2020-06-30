@@ -18,7 +18,6 @@ jobs:
       - name: Display branch name
         run: |
           echo Running for branch "$BRANCH_NAME"
-          echo test1 ${GITHUB_REF:11}
           echo test2 ${GITHUB_REF#refs/heads/}
           echo test3 "${BRANCH_NAME##*/}"
           echo Dont show this secret "$SECRET_THING"
@@ -59,18 +58,18 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '8'
-      - name: Run Sonar on given branch
-        run: echo "Not on master branch"
+      - name: Run Sonar on given (non-master) branch
         if: ${{ github.ref != 'refs/heads/master' }}
+        run: ./gradlew sonarqube -PexcludeProjects='**/samples/**' -Dsonar.projectKey='spring-security-${GITHUB_REF#refs/heads/}' -Dsonar.projectName='spring-security-${GITHUB_REF#refs/heads/}' -Dsonar.host.url=$SPRING_SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN --stacktrace
 #      - name: Run Sonar on master
-#        run: ./gradlew sonarqube -PexcludeProjects='**/samples/**' -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" --stacktrace
+#        if: ${{ github.ref == 'refs/heads/master' }}
+#        run: ./gradlew sonarqube -PexcludeProjects='**/samples/**' -Dsonar.host.url=$SPRING_SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN --stacktrace
 #        env:
 #          SONAR_URL: ${{ secrets.SONAR_URL }}
 #          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#        if: ${{ github.ref == 'refs/heads/master' }}
   artifacts:
     name: Deploy Artifacts
-#    needs: [build, snapshot_tests, sonar]
+    needs: [build, snapshot_tests, sonar]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -79,13 +78,14 @@ jobs:
         with:
           java-version: '8'
       - name: Sign archives
-        run: |
-          export ORG_GRADLE_PROJECT_signingKey="$TEST_SIGNING_KEY"
-          export ORG_GRADLE_PROJECT_signingPassword="$TEST_SIGNING_PASSWORD"
-          ./gradlew :spring-security-core:signArchives --stacktrace
-        env:
-          TEST_SIGNING_KEY: ${{ secrets.TEST_SIGNING_KEY }}
-          TEST_SIGNING_PASSWORD: ${{ secrets.TEST_SIGNING_PASSWORD }}
+        run: echo Signing archives
+#        run: |
+#          export ORG_GRADLE_PROJECT_signingKey="$TEST_SIGNING_KEY"
+#          export ORG_GRADLE_PROJECT_signingPassword="$TEST_SIGNING_PASSWORD"
+#          ./gradlew :spring-security-core:signArchives --stacktrace
+#        env:
+#          TEST_SIGNING_KEY: ${{ secrets.TEST_SIGNING_KEY }}
+#          TEST_SIGNING_PASSWORD: ${{ secrets.TEST_SIGNING_PASSWORD }}
 #          Extra comment
 #          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
 #          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
