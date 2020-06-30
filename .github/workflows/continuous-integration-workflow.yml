@@ -23,9 +23,8 @@ jobs:
           echo test3 "${BRANCH_NAME##*/}"
         env:
           BRANCH_NAME: ${{ github.ref }}
-          env:
-            SONAR_URL: ${{ secrets.SONAR_URL }}
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_URL: ${{ secrets.SONAR_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
