@@ -80,13 +80,13 @@ jobs:
           java-version: '8'
       - name: Sign archives
         run: |
-          export ORG_GRADLE_PROJECT_signingKey="$GPG_PUBLIC_KEY"
+          export ORG_GRADLE_PROJECT_signingKey="$GPG_PRIVATE_KEY"
           echo key set to "$ORG_GRADLE_PROJECT_signingKey"
           export ORG_GRADLE_PROJECT_signingPassword="$GPG_PASSPHRASE"
           echo password set to "$ORG_GRADLE_PROJECT_signingPassword"
           ./gradlew :spring-security-core:signArchives --stacktrace
         env:
-          GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
+          GPG_PUBLIC_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 #          Extra comment
 #          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
