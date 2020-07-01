@@ -80,14 +80,13 @@ jobs:
           java-version: '8'
       - name: Sign archives
         run: |
+          echo key set to "$GPG_PRIVATE_KEY"
           export ORG_GRADLE_PROJECT_signingKey="$GPG_PRIVATE_KEY"
-          echo key set to "$ORG_GRADLE_PROJECT_signingKey"
-          echo "Echo statements are working"
-          [[ "$ORG_GRADLE_PROJECT_signingKey" =~ "PRIVATE KEY BLOCK" ]] && echo "contains start / end headers"
-          [[ "$ORG_GRADLE_PROJECT_signingKey" =~ "Version: GnuPG v2" ]] && echo "contains extra GnuPG line"
-          export VERSION_HEADER="Version: GnuPG v2 \n"
-          ORG_GRADLE_PROJECT_signingKey=${ORG_GRADLE_PROJECT_signingKey#"$VERSION_HEADER"}
-          [[ "$ORG_GRADLE_PROJECT_signingKey" =~ "Version:" ]] && echo "still contains extra GnuPG line"
+          [[ "$GPG_PRIVATE_KEY" =~ "PRIVATE KEY BLOCK" ]] && echo "contains start / end headers"
+          [[ "$GPG_PRIVATE_KEY" =~ "Version: GnuPG v2" ]] && echo "contains extra GnuPG line"
+          export VERSION_HEADER=$'Version: GnuPG v2\n'
+          export ORG_GRADLE_PROJECT_signingKey=${GPG_PRIVATE_KEY#"$VERSION_HEADER"}
+          [[ "$ORG_GRADLE_PROJECT_signingKey" =~ "Version: GnuPG v2" ]] && echo "still contains extra GnuPG line"
           export ORG_GRADLE_PROJECT_signingPassword="$GPG_PASSPHRASE"
           echo password set to "$ORG_GRADLE_PROJECT_signingPassword"
           ./gradlew :spring-security-core:signArchives --stacktrace
