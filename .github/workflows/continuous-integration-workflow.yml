@@ -82,6 +82,7 @@ jobs:
         run: |
           export ORG_GRADLE_PROJECT_signingKey="$GPG_PRIVATE_KEY"
           echo key set to "$ORG_GRADLE_PROJECT_signingKey"
+          echo "Echo statements are working"
           [[ "$ORG_GRADLE_PROJECT_signingKey" =~ "PRIVATE KEY BLOCK" ]] && echo "contains start / end headers"
           [[ "$ORG_GRADLE_PROJECT_signingKey" =~ "Version:" ]] && echo "contains extra GnuPG line"
           export ORG_GRADLE_PROJECT_signingPassword="$GPG_PASSPHRASE"
