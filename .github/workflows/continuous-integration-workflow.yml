@@ -82,6 +82,7 @@ jobs:
         run: |
           export ORG_GRADLE_PROJECT_signingKey="$GPG_PRIVATE_KEY"
           echo key set to "$ORG_GRADLE_PROJECT_signingKey"
+          [[ "$ORG_GRADLE_PROJECT_signingKey" =~ "PRIVATE KEY BLOCK" ]] && echo "contains headers"
           export ORG_GRADLE_PROJECT_signingPassword="$GPG_PASSPHRASE"
           echo password set to "$ORG_GRADLE_PROJECT_signingPassword"
           ./gradlew :spring-security-core:signArchives --stacktrace
