@@ -80,7 +80,6 @@ jobs:
           java-version: '8'
       - name: Sign archives
         run: |
-          echo key set to "$GPG_PRIVATE_KEY"
           [[ "$GPG_PRIVATE_KEY" =~ "PRIVATE KEY BLOCK" ]] && echo "contains start / end headers"
           [[ "$GPG_PRIVATE_KEY" =~ "Version: GnuPG v2" ]] && echo "contains extra GnuPG line"
           export VERSION_HEADER=$'Version: GnuPG v2\n'
