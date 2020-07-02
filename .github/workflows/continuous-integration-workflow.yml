@@ -80,22 +80,17 @@ jobs:
           java-version: '8'
       - name: Sign archives
         run: |
-          [[ "$GPG_PRIVATE_KEY" =~ "PRIVATE KEY BLOCK" ]] && echo "contains start / end headers"
-          [[ "$GPG_PRIVATE_KEY" =~ "Version: GnuPG v2" ]] && echo "contains extra GnuPG line"
           export VERSION_HEADER=$'Version: GnuPG v2\n\n'
-          [[ "$GPG_PRIVATE_KEY" =~ "$VERSION_HEADER" ]] && echo "contains two newlines"
           export ORG_GRADLE_PROJECT_signingKey=${GPG_PRIVATE_KEY#"$VERSION_HEADER"}
-          [[ "$ORG_GRADLE_PROJECT_signingKey" =~ VERSION_HEADER ]] && echo "still contains extra GnuPG line with newlines"
           export ORG_GRADLE_PROJECT_signingPassword="$GPG_PASSPHRASE"
-          ./gradlew :spring-security-core:signArchives --stacktrace
+          ./gradlew deployArtifacts finalizeDeployArtifacts -Psigning.keyId=$ORG_GRADLE_PROJECT_signingKey -Psigning.password='$ORG_GRADLE_PROJECT_signingPassword' -PossrhUsername=$OSSRH_USERNAME -PossrhPassword=$OSSRH_PASSWORD -PartifactoryUsername=$ARTIFACTORY_USERNAME -PartifactoryPassword=$ARTIFACTORY_PASSWORD --stacktrace
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-#          Extra comment
-#          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-#          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-#          ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-#          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
   docs:
     name: Deploy Docs
     needs: [build, snapshot_tests, sonar]
