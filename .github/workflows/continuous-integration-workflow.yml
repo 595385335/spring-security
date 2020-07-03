@@ -94,7 +94,7 @@ jobs:
           ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
   docs:
     name: Deploy Docs
-    needs: [build, snapshot_tests, sonar]
+#    needs: [build, snapshot_tests, sonar]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -103,10 +103,10 @@ jobs:
         with:
           java-version: 8
       - name: Deploy Docs
-        run: echo Deploying Docs
+        run: ./gradlew deployDocs --stacktrace
   schema:
     name: Deploy Schema
-    needs: [build, snapshot_tests, sonar]
+#    needs: [build, snapshot_tests, sonar]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
