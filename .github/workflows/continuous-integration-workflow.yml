@@ -106,6 +106,12 @@ jobs:
         env:
           DOCS_USERNAME: ${{ secrets.DOCS_USERNAME }}
           DOCS_SSH_KEY: ${{ secrets.DOCS_SSH_KEY }}
+          # GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          # GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          # OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          # OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          # ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+          # ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
   schema:
     name: Deploy Schema
 #    needs: [build, snapshot_tests, sonar]
