@@ -5,8 +5,8 @@ on:
 #  pull_request:
     branches:
       - deploy-pipeline-test
-  schedule:
-    - cron: '0 10 * * *' # Once per day at 10am UTC
+  # schedule:
+  #   - cron: '0 10 * * *' # Once per day at 10am UTC
 
 jobs:
   build:
@@ -15,16 +15,6 @@ jobs:
 # eventually add in matrix here
     steps:
       - uses: actions/checkout@v2
-      - name: Display branch name
-        run: |
-          echo Running for branch "$BRANCH_NAME"
-          echo test2 ${GITHUB_REF#refs/heads/}
-          echo ./gradlew sonarqube -PexcludeProjects='**/samples/**' -Dsonar.projectKey="spring-security-${GITHUB_REF#refs/heads/}" -Dsonar.projectName="spring-security-${GITHUB_REF#refs/heads/}" -Dsonar.host.url="$SONAR_URL" -Dsonar.login="$SONAR_TOKEN" --stacktrace
-          echo test3 "${BRANCH_NAME##*/}"
-        env:
-          BRANCH_NAME: ${{ github.ref }}
-          SONAR_URL: ${{ secrets.SONAR_URL }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
@@ -46,7 +36,15 @@ jobs:
         with:
           java-version: '8'
       - name: Snapshop Tests
-        run: ./gradlew test -PforceMavenRepositories=snapshot -PspringVersion='5.+' -PreactorVersion=Dysprosium-BUILD-SNAPSHOT -PspringDataVersion=Lovelace-BUILD-SNAPSHOT -PlocksDisabled --stacktrace
+        run: |
+          export GRADLE_ENTERPRISE_CACHE_USERNAME="$GRADLE_ENTERPRISE_CACHE_USER"
+          export GRADLE_ENTERPRISE_CACHE_PASSWORD="$GRADLE_ENTERPRISE_CACHE_PASSWORD"
+          export GRADLE_ENTERPRISE_ACCESS_KEY="$GRADLE_ENTERPRISE_SECRET_ACCESS_KEY"
+          ./gradlew test -PforceMavenRepositories=snapshot -PspringVersion='5.+' -PreactorVersion=Dysprosium-BUILD-SNAPSHOT -PspringDataVersion=Lovelace-BUILD-SNAPSHOT -PlocksDisabled --stacktrace
+        env:
+          GRADLE_ENTERPRISE_CACHE_USER: ${{ secrets.GRADLE_ENTERPRISE_CACHE_USER }}
+          GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.GRADLE_ENTERPRISE_CACHE_PASSWORD }}
+          GRADLE_ENTERPRISE_SECRET_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_SECRET_ACCESS_KEY }}
   sonar:
     name: Static Code Analysis
     runs-on: ubuntu-latest
@@ -68,6 +66,7 @@ jobs:
         env:
           SONAR_URL: ${{ secrets.SONAR_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   artifacts:
     name: Deploy Artifacts
 #    needs: [build, snapshot_tests, sonar]
