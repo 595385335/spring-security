@@ -129,9 +129,6 @@ jobs:
         env:
           DOCS_USERNAME: ${{ secrets.DOCS_USERNAME }}
           DOCS_SSH_KEY: ${{ secrets.DOCS_SSH_KEY }}
-#          GRADLE_ENTERPRISE_CACHE_USER: ${{ secrets.GRADLE_ENTERPRISE_CACHE_USER }}
-#          GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.GRADLE_ENTERPRISE_CACHE_PASSWORD }}
-#          GRADLE_ENTERPRISE_SECRET_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_SECRET_ACCESS_KEY }}
   schema:
     name: Deploy Schema
 #    needs: [build, snapshot_tests, sonar]
