@@ -54,6 +54,7 @@ task copyDocs {
 	doLast {
 		project.ssh.run {
 			session(project.remotes.docs) {
+				println "Inside the docsZip task"
 				def now = System.currentTimeMillis()
 				def name = project.rootProject.name
 				def version = project.rootProject.version
