@@ -123,8 +123,12 @@ jobs:
         run: |
           export GRADLE_ENTERPRISE_CACHE_USERNAME="$GRADLE_ENTERPRISE_CACHE_USER"
           export GRADLE_ENTERPRISE_CACHE_PASSWORD="$GRADLE_ENTERPRISE_CACHE_PASSWORD"
-          export GRADLE_ENTERPRISE_ACCESS_KEY="$GRADLE_ENTERPRISE_SECRET_ACCESS_KEY"
-          ./gradlew deployDocs -PdeployDocsSshKeyPath="$DOCS_SSH_KEY" -PdeployDocsSshUsername="$DOCS_USERNAME" --stacktrace
+          export GRADLE_ENTERPRISE_ACCESS_KEY="$GRADLE_ENTERPRISE_SECRET_ACCESS_KEY"docs
+          ./gradlew :spring-security-docs-manual:docsZip
+          ls docs/manual/build/ || true
+          ls docs/manual/build/distributions/ || true
+          ./gradlew :spring-security-docs-manual:printDocs
+#          ./gradlew deployDocs -PdeployDocsSshKeyPath="$DOCS_SSH_KEY" -PdeployDocsSshUsername="$DOCS_USERNAME" --stacktrace
         env:
           DOCS_USERNAME: ${{ secrets.DOCS_USERNAME }}
           DOCS_SSH_KEY: ${{ secrets.DOCS_SSH_KEY }}
@@ -142,11 +146,12 @@ jobs:
         with:
           java-version: 8
       - name: Deploy Schema
-        run: |
-          export GRADLE_ENTERPRISE_CACHE_USERNAME="$GRADLE_ENTERPRISE_CACHE_USER"
-          export GRADLE_ENTERPRISE_CACHE_PASSWORD="$GRADLE_ENTERPRISE_CACHE_PASSWORD"
-          export GRADLE_ENTERPRISE_ACCESS_KEY="$GRADLE_ENTERPRISE_SECRET_ACCESS_KEY"
-          ./gradlew deploySchema -PdeployDocsSshKeyPath=$DOCS_SSH_KEY -PdeployDocsSshUsername=$DOCS_USERNAME --stacktrace
+        run: echo Deploying schema
+#        run: |
+#          export GRADLE_ENTERPRISE_CACHE_USERNAME="$GRADLE_ENTERPRISE_CACHE_USER"
+#          export GRADLE_ENTERPRISE_CACHE_PASSWORD="$GRADLE_ENTERPRISE_CACHE_PASSWORD"
+#          export GRADLE_ENTERPRISE_ACCESS_KEY="$GRADLE_ENTERPRISE_SECRET_ACCESS_KEY"
+#          ./gradlew deploySchema -PdeployDocsSshKeyPath=$DOCS_SSH_KEY -PdeployDocsSshUsername=$DOCS_USERNAME --stacktrace
         env:
           DOCS_USERNAME: ${{ secrets.DOCS_USERNAME }}
           DOCS_SSH_KEY: ${{ secrets.DOCS_SSH_KEY }}

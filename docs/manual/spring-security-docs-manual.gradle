@@ -36,6 +36,19 @@ dependencies {
 	testCompile "org.springframework:spring-core"
 }
 
+task printDocs {
+   dependsOn 'docsZip'
+   doLast {
+       println '='*25
+       tasks.docsZip.outputs.each { o ->
+           o.files.each { f ->
+               println f
+           }
+       }
+       println '='*25
+    }
+}
+
 def resolvedVersions(Configuration configuration) {
 	return {
 		configuration.resolvedConfiguration
