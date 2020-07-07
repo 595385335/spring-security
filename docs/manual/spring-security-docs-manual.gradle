@@ -49,6 +49,40 @@ task printDocs {
     }
 }
 
+task copyDocs {
+	dependsOn 'docsZip'
+	doLast {
+		project.ssh.run {
+			session(project.remotes.docs) {
+				def now = System.currentTimeMillis()
+				def name = project.rootProject.name
+				def version = project.rootProject.version
+				def tempPath = "/tmp/${name}-${now}-docs/".replaceAll(' ', '_')
+				println "Attempting to mkdir $tempPath"
+				execute "mkdir -p $tempPath"
+				println "Done!"
+				println "Attempting to copy files"
+				project.tasks.docsZip.outputs.each { o ->
+					put from: o.files, into: tempPath
+				}
+				println "Done"
+				println "Attempting to unzip $tempPath*.zip -d $tempPath"
+				execute "unzip $tempPath*.zip -d $tempPath"
+				println "Done!"
+				def extractPath = "/var/www/domains/spring.io/docs/htdocs/autorepo/docs/${name}/${version}/"
+				println "extractPath $extractPath"
+				execute "rm -rf $extractPath"
+				println "mkdir"
+				execute "mkdir -p $extractPath"
+				println "mv"
+				execute "mv $tempPath/docs/* $extractPath"
+				println "chmod"
+				execute "chmod -R g+w $extractPath"
+			}
+		}
+	}
+}
+
 def resolvedVersions(Configuration configuration) {
 	return {
 		configuration.resolvedConfiguration
