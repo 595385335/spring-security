@@ -124,8 +124,15 @@ jobs:
           ./gradlew :spring-security-docs-manual:docsZip
           ls docs/manual/build/ || true
           ls docs/manual/build/distributions/ || true
+          export HEADER=$'-----BEGIN OPENSSH PRIVATE KEY-----\n'
+          export DOUBLE_HEADER=$'-----BEGIN OPENSSH PRIVATE KEY-----\n'
+          export FOOTER=$'\n-----END OPENSSH PRIVATE KEY-----'
+          export DOUBLE_FOOTER=$'\n\n-----END OPENSSH PRIVATE KEY-----'
           [[ "$DOCS_SSH_KEY" =~ "BEGIN OPENSSH PRIVATE KEY" ]] && echo "contains newer OpenSSH line"
-          [[ "$DOCS_SSH_KEY" =~ "---BEGIN" ]] && echo "contains some header"
+          [[ "$DOCS_SSH_KEY" =~ $HEADER ]] && echo "contains header"
+          [[ "$DOCS_SSH_KEY" =~ $DOUBLE_HEADER ]] && echo "contains header with double newline"
+          [[ "$DOCS_SSH_KEY" =~ $FOOTER ]] && echo "contains footer"
+          [[ "$DOCS_SSH_KEY" =~ $DOUBLE_FOOTER ]] && echo "contains double newline footer"
           ./gradlew :spring-security-docs-manual:printDocs
           ./gradlew :spring-security-docs-manual:copyDocs -PdeployDocsSshKey="$DOCS_SSH_KEY" -PdeployDocsSshUsername="$DOCS_USERNAME" --stacktrace
         env:
