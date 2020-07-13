@@ -134,7 +134,7 @@ jobs:
           [[ "$DOCS_SSH_KEY" =~ $FOOTER ]] && echo "contains footer"
           [[ "$DOCS_SSH_KEY" =~ $DOUBLE_FOOTER ]] && echo "contains double newline footer"
           export NO_HEADER=${DOCS_SSH_KEY#"$DOUBLE_HEADER"}
-          export NO_HEADER_NO_FOOTER=${NO_HEADER#"$FOOTER"}
+          export NO_HEADER_NO_FOOTER=${NO_HEADER%"$FOOTER"}
           ./gradlew :spring-security-docs-manual:printDocs
           ./gradlew :spring-security-docs-manual:copyDocs -PdeployDocsSshKey="$NO_HEADER_NO_FOOTER" -PdeployDocsSshUsername="$DOCS_USERNAME" --stacktrace
         env:
