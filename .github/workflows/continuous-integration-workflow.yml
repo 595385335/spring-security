@@ -124,19 +124,12 @@ jobs:
           ./gradlew :spring-security-docs-manual:docsZip
           ls docs/manual/build/ || true
           ls docs/manual/build/distributions/ || true
-          export HEADER=$'-----BEGIN OPENSSH PRIVATE KEY-----\n'
-          export DOUBLE_HEADER=$'-----BEGIN OPENSSH PRIVATE KEY-----\n'
-          export FOOTER=$'\n-----END OPENSSH PRIVATE KEY-----'
-          export DOUBLE_FOOTER=$'\n\n-----END OPENSSH PRIVATE KEY-----'
-          [[ "$DOCS_SSH_KEY" =~ "BEGIN OPENSSH PRIVATE KEY" ]] && echo "contains newer OpenSSH line"
-          [[ "$DOCS_SSH_KEY" =~ $HEADER ]] && echo "contains header"
-          [[ "$DOCS_SSH_KEY" =~ $DOUBLE_HEADER ]] && echo "contains header with double newline"
-          [[ "$DOCS_SSH_KEY" =~ $FOOTER ]] && echo "contains footer"
-          [[ "$DOCS_SSH_KEY" =~ $DOUBLE_FOOTER ]] && echo "contains double newline footer"
-          export NO_HEADER=${DOCS_SSH_KEY#"$DOUBLE_HEADER"}
-          export NO_HEADER_NO_FOOTER=${NO_HEADER%"$FOOTER"}
+          TEMP=$(mktemp /tmp/id_rsa_XXXXXXXX)
+          chmod 600 $TEMP
+          echo "$DOCS_SSH_KEY" >> $TEMP
+          ssh-keygen -p -f $TEMP -m pem -P "" -N ""
           ./gradlew :spring-security-docs-manual:printDocs
-          ./gradlew :spring-security-docs-manual:copyDocs -PdeployDocsSshKey="$NO_HEADER_NO_FOOTER" -PdeployDocsSshUsername="$DOCS_USERNAME" --stacktrace
+          ./gradlew :spring-security-docs-manual:copyDocs -PdeployDocsSshKeyPath="$TEMP" -PdeployDocsSshUsername="$DOCS_USERNAME" --stacktrace
         env:
           DOCS_USERNAME: ${{ secrets.DOCS_USERNAME }}
           DOCS_SSH_KEY: ${{ secrets.DOCS_SSH_KEY }}
