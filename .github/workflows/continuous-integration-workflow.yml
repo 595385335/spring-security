@@ -128,7 +128,7 @@ jobs:
           chmod 600 $TEMP
           echo "$DOCS_SSH_KEY" >> $TEMP
           ssh-keygen -p -f $TEMP -m pem -P "" -N ""
-          grep -q RSA $TEMP && echo contains-rsa
+          grep -q "RSA" $TEMP && echo contains-rsa
           ./gradlew :spring-security-docs-manual:printDocs
           ./gradlew :spring-security-docs-manual:copyDocs -PdeployDocsSshKeyPath="$TEMP" -PdeployDocsSshUsername="$DOCS_USERNAME" --stacktrace
         env:
